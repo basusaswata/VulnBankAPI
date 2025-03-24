@@ -56,7 +56,7 @@ jobs:
           echo " Listing Files:"
           ls -l
           
-          cd /home/ec2-user/app
+          cd /home/ec2-user/app/target
           echo "➡ Switched to app folder: $(pwd)"
           
           echo " Files in app folder:"
@@ -69,7 +69,7 @@ jobs:
           pkill -f 'java -jar' || true
           
           echo " Starting Spring Boot app..."
-          nohup java -jar "$JAR_FILE" > app.log 2>&1 &
+          nohup java -jar VulBankAPI-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
           
           echo " App deployed successfully!"
         EOF
