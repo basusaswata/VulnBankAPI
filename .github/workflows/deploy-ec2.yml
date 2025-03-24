@@ -54,6 +54,8 @@ jobs:
           
           echo "Navigating to app folder..."
           cd /home/ec2-user/app/target
+          pwd
+          ls
           
           echo "Finding JAR file..."
           JAR_FILE=$(ls *.jar)
