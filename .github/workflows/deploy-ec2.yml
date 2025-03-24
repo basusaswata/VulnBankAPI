@@ -42,11 +42,11 @@ jobs:
         target: "/home/ec2-user/app"
 
   # 5️SSH & Start App Dynamically
- - name: SSH into EC2 and Deploy
+    - name: SSH into EC2 and Deploy
       run: |
         echo "SSH into EC2 and deploying app..."
         ssh -i ${{ secrets.EC2_SSH_KEY_FILE }} -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-          echo "Connected to EC2 Instance"
+          echo " Connected to EC2 Instance"
           
           echo " Current Directory:"
           pwd
@@ -63,11 +63,12 @@ jobs:
           JAR_FILE=$(ls *.jar)
           echo "Found JAR File: $JAR_FILE"
           
-          echo "Killing any old process..."
+          echo " Killing any old process..."
           pkill -f 'java -jar' || true
           
           echo " Starting Spring Boot app..."
           nohup java -jar "$JAR_FILE" > app.log 2>&1 &
           
           echo " App deployed successfully!"
+        EOF
         
