@@ -53,7 +53,7 @@ jobs:
           pkill -f 'java -jar' || true
           
           echo "Navigating to app folder..."
-          cd /home/ec2-user/app
+          cd /home/ec2-user/app/target
           
           echo "Finding JAR file..."
           JAR_FILE=$(ls *.jar)
