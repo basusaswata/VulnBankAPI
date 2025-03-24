@@ -33,7 +33,7 @@ jobs:
         name: springboot-app
         path: target/*.jar
 
-    # 5️Deploy to EC2
+    # 4️Copy JAR to EC2
     - name: Copy JAR to EC2
       uses: appleboy/scp-action@v0.1.7
       with:
@@ -43,15 +43,24 @@ jobs:
         source: "target/*.jar"
         target: "/home/ec2-user/app"
 
-    # 6 SSH & Start App
-    - name: SSH into EC2 & Run App
+    # 5️SSH & Start App Dynamically
+    - name: SSH into EC2 & Run Spring Boot App
       uses: appleboy/ssh-action@v0.1.10
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
+          echo "Stopping old app process if running..."
           pkill -f 'java -jar' || true
+          
+          echo "Navigating to app folder..."
           cd /home/ec2-user/app
-          nohup java -jar *.jar > app.log 2>&1 &
-
+          
+          echo "Finding JAR file..."
+          JAR_FILE=$(ls *.jar)
+          
+          echo "Starting new app: $JAR_FILE"
+          nohup java -jar "$JAR_FILE" > app.log 2>&1 &
+          
+          echo "Deployment done! App running on port 8080."
