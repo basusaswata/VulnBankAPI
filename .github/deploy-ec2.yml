@@ -1,0 +1,57 @@
+name: Build and Deploy Spring Boot App to AWS EC2
+
+on:
+  push:
+    branches:
+      - main  # or master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    # 1️Checkout Code
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # 2️Set up Java & Maven
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+
+    # 3️Build with Maven
+    - name: Build Spring Boot App
+      run: mvn clean package
+
+    # 4️Upload Artifact
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: springboot-app
+        path: target/*.jar
+
+    # 5️Deploy to EC2
+    - name: Copy JAR to EC2
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        source: "target/*.jar"
+        target: "/home/ec2-user/app"
+
+    # 6 SSH & Start App
+    - name: SSH into EC2 & Run App
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          pkill -f 'java -jar' || true
+          cd /home/ec2-user/app
+          nohup java -jar *.jar > app.log 2>&1 &
+ 
