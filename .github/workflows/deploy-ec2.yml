@@ -59,7 +59,7 @@ jobs:
           
           echo "Finding JAR file..."
           JAR_FILE=$(ls *.jar)
-          echo "JAR File Found: $JAR_FILE"
+          echo $JAR_FILE
           
           echo "Starting new app: $JAR_FILE"
           nohup java -jar VulBankAPI-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
