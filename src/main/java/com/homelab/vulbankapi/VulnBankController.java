@@ -69,7 +69,7 @@ public class VulnBankController {
     // SQL Injection
     @GetMapping("/search")
     public List<Map<String, Object>> search(@RequestParam String name) {
-        return jdbcTemplate.queryForList("SELECT * FROM user WHERE username = '" + name + "'");
+        return jdbcTemplate.queryForList("SELECT * FROM user WHERE username = ?", name);
     }
 
     // Insufficient Logging
