@@ -62,10 +62,6 @@ public class VulnBankController {
         return "Comment added!";
     }
 
-    // Security Misconfiguration
-    @GetMapping("/debug/env")
-    public Map<String, String> getEnv() { return System.getenv(); }
-
     // SQL Injection
     @GetMapping("/search")
     public List<Map<String, Object>> search(@RequestParam String name) {
